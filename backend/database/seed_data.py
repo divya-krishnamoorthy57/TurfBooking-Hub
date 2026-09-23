@@ -76,7 +76,7 @@ def seed():
                 "description": "Spacious football turf arena with top-tier shock-absorption turf technology, ideal for 5-a-side and 7-a-side matches in the heart of Peelamedu.",
                 "price_per_hour": 700.0,
                 "rating": 4.6,
-                "image": "https://images.unsplash.com/photo-1529900241450-482f3c7e750e?auto=format&fit=crop&w=1200&q=80",
+                "image": "https://images.unsplash.com/photo-1556056504-5c7696c4c28d?auto=format&fit=crop&w=1200&q=80",
                 "facilities": "Flood Lights, Drinking Water, Washroom, Parking",
                 "sports": ["Football"]
             },
@@ -116,7 +116,7 @@ def seed():
                 "description": "Modern multi-court setup offering all-weather basketball hardcourt and 5-a-side artificial football turf, right next to Gandhipuram central hub.",
                 "price_per_hour": 800.0,
                 "rating": 4.7,
-                "image": "https://images.unsplash.com/photo-1519766304817-4f37bda74a29?auto=format&fit=crop&w=1200&q=80",
+                "image": "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&w=1200&q=80",
                 "facilities": "Flood Lights, Parking, Washroom, Drinking Water, Seating Area",
                 "sports": ["Basketball", "Football"]
             }
