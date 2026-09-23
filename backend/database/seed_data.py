@@ -13,6 +13,7 @@ from backend.models.turf import Turf, Sport, TurfSport
 from backend.models.booking import Booking
 from backend.utils.security import hash_password
 
+
 def seed():
     Base.metadata.create_all(bind=engine)
     db = SessionLocal()
@@ -21,17 +22,24 @@ def seed():
         # 1. Seed Sports
         sports_data = ["Football", "Cricket", "Badminton", "Basketball"]
         sport_map = {}
+
         for s_name in sports_data:
             sport = db.query(Sport).filter(Sport.name == s_name).first()
+
             if not sport:
                 sport = Sport(name=s_name)
                 db.add(sport)
                 db.flush()
+
             sport_map[s_name] = sport
 
         # 2. Seed Users
+
         # Admin
-        admin = db.query(User).filter(User.email == "admin@turfbooking.com").first()
+        admin = db.query(User).filter(
+            User.email == "admin@turfbooking.com"
+        ).first()
+
         if not admin:
             admin = User(
                 name="Admin Manager",
@@ -44,7 +52,10 @@ def seed():
             print("Admin account created: admin@turfbooking.com / Admin@123456")
 
         # Demo User
-        demo_user = db.query(User).filter(User.email == "karthik@gmail.com").first()
+        demo_user = db.query(User).filter(
+            User.email == "karthik@gmail.com"
+        ).first()
+
         if not demo_user:
             demo_user = User(
                 name="Karthik Raj",
@@ -122,9 +133,20 @@ def seed():
             }
         ]
 
+        # Create new turfs and update images for existing turfs
         for t_info in turfs_data:
-            existing_turf = db.query(Turf).filter(Turf.name == t_info["name"]).first()
-            if not existing_turf:
+
+            existing_turf = db.query(Turf).filter(
+                Turf.name == t_info["name"]
+            ).first()
+
+            if existing_turf:
+                # Update only the image for existing turf
+                existing_turf.image = t_info["image"]
+
+                print(f"Updated image: {existing_turf.name}")
+
+            else:
                 turf = Turf(
                     name=t_info["name"],
                     location=t_info["location"],
@@ -134,22 +156,37 @@ def seed():
                     image=t_info["image"],
                     facilities=t_info["facilities"]
                 )
+
                 db.add(turf)
                 db.flush()
 
                 for sp_name in t_info["sports"]:
                     sp = sport_map.get(sp_name)
+
                     if sp:
-                        db.add(TurfSport(turf_id=turf.id, sport_id=sp.id))
+                        db.add(
+                            TurfSport(
+                                turf_id=turf.id,
+                                sport_id=sp.id
+                            )
+                        )
+
                 print(f"Created turf: {turf.name}")
 
         # 4. Create sample upcoming and past booking for demo user
         first_turf = db.query(Turf).first()
+
         if demo_user and first_turf:
-            existing_sample_booking = db.query(Booking).filter(Booking.user_id == demo_user.id).first()
+
+            existing_sample_booking = db.query(Booking).filter(
+                Booking.user_id == demo_user.id
+            ).first()
+
             if not existing_sample_booking:
+
                 # Upcoming booking for tomorrow
                 tomorrow = date.today() + timedelta(days=1)
+
                 b1 = Booking(
                     booking_code="TBH-DEMO-01",
                     user_id=demo_user.id,
@@ -160,10 +197,12 @@ def seed():
                     total_amount=float(first_turf.price_per_hour),
                     status="CONFIRMED"
                 )
+
                 db.add(b1)
-                
+
                 # Past booking
                 yesterday = date.today() - timedelta(days=2)
+
                 b2 = Booking(
                     booking_code="TBH-PAST-02",
                     user_id=demo_user.id,
@@ -174,17 +213,23 @@ def seed():
                     total_amount=float(first_turf.price_per_hour),
                     status="COMPLETED"
                 )
+
                 db.add(b2)
+
                 print("Created sample bookings for demo user")
 
         db.commit()
+
         print("Database seeded successfully!")
+
     except Exception as e:
         db.rollback()
         print("Error seeding database:", e)
         raise
+
     finally:
         db.close()
+
 
 if __name__ == "__main__":
     seed()
